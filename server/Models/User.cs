@@ -14,12 +14,9 @@ namespace server.Models
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
 
-        public int WorkoutPlanId { get; set; }
-        public WorkoutPlan WorkoutPlan { get; set; } = null!;
-        public int WorkoutLogId { get; set; }
-        public WorkoutLog WorkoutLog { get; set; } = null!;
-        public int PromptHistoryId { get; set; }
-        public PromptHistory PromptHistory { get; set; } = null!;
+        public WorkoutPlan WorkoutPlan { get; set; } = null!; // one to one relationship
+        public List<WorkoutLog> WorkoutLogs { get; set; } = new(); // one to many relationship
+        public List<PromptHistory> PromptHistory { get; set; } = new(); // one to many relationship
 
     }
 }

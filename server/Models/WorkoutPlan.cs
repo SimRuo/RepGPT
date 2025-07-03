@@ -14,8 +14,7 @@ namespace server.Models
 
         public int UserId { get; set; }
         public User User { get; set; } = null!;
-        public int WorkoutDayId { get; set; } // not sure if this should be here, we can now navigate in both directions
-        public WorkoutDay WorkoutDay { get; set; } = null!; // not sure if this should be here, we can now navigate in both directions
+        public List<WorkoutDay> WorkoutDays { get; set; } = new();
 
     }
 }

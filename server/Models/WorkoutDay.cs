@@ -11,7 +11,8 @@ namespace server.Models
         public string DayOfTheWeek { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
 
-        public int WorkoutExerciseId { get; set; }
-        public WorkoutExercise WorkoutExercise { get; set; } = null!;
+        public List<WorkoutExercise> WorkoutExercises { get; set; } = new();
+        public int WorkoutPlanId { get; set; }
+        public WorkoutPlan WorkoutPlan { get; set; } = null!;
     }
 }

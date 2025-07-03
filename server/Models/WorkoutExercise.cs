@@ -13,9 +13,13 @@ namespace server.Models
         public decimal TargetWeight { get; set; }
         public TimeSpan TargetTime { get; set; }
 
-        public int WorkoutLogId { get; set; }
-        public WorkoutLog WorkoutLog { get; set; } = null!;
+
+        public int WorkoutDayId { get; set; }
+        public WorkoutDay WorkoutDay { get; set; } = null!;
+
         public int ExerciseId { get; set; }
         public Exercise Exercise { get; set; } = null!;
+
+        public List<WorkoutLog> WorkoutLogs { get; set; } = new();
     }
 }
