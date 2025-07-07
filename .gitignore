@@ -1,3 +1,4 @@
 server/bin/Debug/net8.0/appsettings.Development.json
 docs/SQL Database Server.txt
 docs/notes.txt
+server/appsettings.Development.json

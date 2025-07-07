@@ -8,7 +8,7 @@ namespace server.Models
     public class WorkoutDay
     {
         public int Id { get; set; }
-        public string DayOfTheWeek { get; set; } = string.Empty;
+        public DateTime DayOfTheWeek { get; set; }
         public string Notes { get; set; } = string.Empty;
 
         public List<WorkoutExercise> WorkoutExercises { get; set; } = new();
