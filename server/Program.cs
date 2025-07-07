@@ -1,8 +1,11 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using server.Data;
+using server.Models;
+using server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 // var jwtKey = builder.Configuration["Jwt:Key"];
 
-// Add DbContext
 builder.Services.AddDbContext<RepGPTContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<UserService>();
 
 /*
 // Add JWT Authentication (commented out for now)
@@ -32,6 +36,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 */
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -55,6 +60,6 @@ app.UseCors();
 // app.UseAuthentication();
 // app.UseAuthorization();
 
-// app.MapControllers();
+app.MapControllers();
 
 app.Run();
