@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using server.Data;
 using server.DTOs.User;
+using server.Models;
 using server.Services;
 
 namespace server.Controllers
@@ -9,10 +13,14 @@ namespace server.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly RepGPTContext _context;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public UserController(UserService userService)
+        public UserController(UserService userService, RepGPTContext context, IPasswordHasher<User> passwordHasher)
         {
             _userService = userService;
+            _context = context;
+            _passwordHasher = passwordHasher;
         }
 
         // GET: api/user
@@ -56,6 +64,24 @@ namespace server.Controllers
             var success = await _userService.DeleteAsync(id);
             if (!success) return NotFound();
             return NoContent();
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<UserReadDto>> Login(LoginDto dto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            if (user == null) return Unauthorized("Invalid email");
+
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
+            if (result == PasswordVerificationResult.Failed)
+                return Unauthorized("Invalid password");
+
+            return Ok(new UserReadDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email
+            });
         }
     }
 }
