@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.DTOs.User;
+using server.DTOs.WorkoutDay;
+using server.DTOs.WorkoutExercise;
+using server.DTOs.WorkoutPlan;
 using server.Models;
 
 namespace server.Services
@@ -41,23 +44,41 @@ namespace server.Services
         }
         public async Task<UserReadDto?> GetByIdAsync(int id)
         {
-            try
-            {
-                return await _context.Users
-                    .Where(u => u.Id == id)
-                    .Select(u => new UserReadDto
+            return await _context.Users
+                .Include(u => u.WorkoutPlan)
+                    .ThenInclude(p => p.WorkoutDays)
+                        .ThenInclude(d => d.WorkoutExercises)
+                .Where(u => u.Id == id)
+                .Select(u => new UserReadDto
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Email = u.Email,
+                    WorkoutPlan = u.WorkoutPlan == null ? null : new WorkoutPlanReadDto
                     {
-                        Id = u.Id,
-                        Name = u.Name,
-                        Email = u.Email
-                    })
-                    .FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"Failed to fetch user with id {id}", ex);
-            }
+                        Id = u.WorkoutPlan.Id,
+                        Name = u.WorkoutPlan.Name,
+                        Goal = u.WorkoutPlan.Goal,
+                        UserId = u.WorkoutPlan.UserId,
+                        WorkoutDays = u.WorkoutPlan.WorkoutDays.Select(d => new WorkoutDayReadDto
+                        {
+                            Id = d.Id,
+                            DayOfTheWeek = d.DayOfTheWeek,
+                            Notes = d.Notes,
+                            WorkoutExercises = d.WorkoutExercises.Select(e => new WorkoutExerciseReadDto
+                            {
+                                Id = e.Id,
+                                Sets = e.Sets,
+                                Reps = e.Reps,
+                                TargetWeight = e.TargetWeight,
+                                TargetTime = e.TargetTime
+                            }).ToList()
+                        }).ToList()
+                    }
+                })
+                .FirstOrDefaultAsync();
         }
+
 
         public async Task<UserReadDto> CreateAsync(UserCreateDto dto)
         {

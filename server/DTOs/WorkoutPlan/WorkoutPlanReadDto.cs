@@ -1,3 +1,5 @@
+using server.DTOs.WorkoutDay;
+
 namespace server.DTOs.WorkoutPlan
 {
     public class WorkoutPlanReadDto
@@ -7,5 +9,6 @@ namespace server.DTOs.WorkoutPlan
         public string Goal { get; set; } = string.Empty;
         public int UserId { get; set; }
 
+        public List<WorkoutDayReadDto> WorkoutDays { get; set; } = new();
     }
 }
