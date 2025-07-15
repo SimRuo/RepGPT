@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { loginUser, loginAs } from "../services/auth";
 import { Container, Box, TextField, Typography, Button, Alert, Paper } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function LoginView({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -14,11 +16,14 @@ function LoginView({ onLoginSuccess }) {
       loginAs(user.id);
       setError(null);
       if (onLoginSuccess) onLoginSuccess(user);
+      navigate("/");
     } catch {
       setError("Invalid email or password");
     }
   }
 
+  // I could add another loader here to check if a user is logged in and funnel them through to chat/dashboard
+  
   return (
     <Container maxWidth="xs">
       <Paper elevation={3} sx={{ padding: 4, marginTop: 8 }}>

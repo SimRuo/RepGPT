@@ -7,7 +7,7 @@ export async function getUserState() {
 
     try {
         const user = await getUserById(userId);
-        return user.workoutPlanId
+        return user.workoutPlan
             ? { status: "dashboard", user }
             : { status: "chat", user };
     } catch {

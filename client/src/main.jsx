@@ -1,30 +1,54 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom";
 
 import App from "./App.jsx";
 import LoginView from "./views/LoginView.jsx";
 import Dashboard from "./views/Dashboard.jsx";
 import Home from "./views/Home.jsx";
 import NotFound from "./views/NotFound.jsx";
+import ChatView from "./views/ChatView.jsx";
+import { getUserState } from "./services/getUserState";
 
 import "./index.css";
-import ChatView from "./views/ChatView.jsx";
-
-const requireAuth = (element) => {
-  const userId = localStorage.getItem("userId");
-  return userId ? element : <LoginView />;
-};
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      { path: "/", element: <Home /> },
+      {
+        path: "/",
+        element: <Home />,
+        loader: async () => {
+          const { status } = await getUserState();
+          if (status === "unauthenticated") return redirect("/login");
+          if (status === "chat") return redirect("/chat");
+          if (status === "dashboard") return redirect("/dashboard");
+          return null;
+        },
+      },
       { path: "/login", element: <LoginView /> },
-      { path: "/dashboard", element: requireAuth(<Dashboard />) },
-      { path: "/chat", element: requireAuth(<ChatView />) },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+        loader: async () => {
+          const { status } = await getUserState();
+          if (status === "unauthenticated") return redirect("/login");
+          if (status === "chat") return redirect("/chat");
+          return null;
+        },
+      },
+      {
+        path: "/chat",
+        element: <ChatView />,
+        loader: async () => {
+          const { status } = await getUserState();
+          if (status === "unauthenticated") return redirect("/login");
+          if (status === "dashboard") return redirect("/dashboard");
+          return null;
+        },
+      },
       { path: "*", element: <NotFound /> },
     ],
   },

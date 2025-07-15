@@ -7,6 +7,7 @@ export async function loginUser(email, password) {
     return res.data;
 }
 
+// we're just saving the user ID and not the object
 export function loginAs(userId) {
     localStorage.setItem('userId', userId);
 }
