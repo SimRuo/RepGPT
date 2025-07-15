@@ -27,6 +27,6 @@ export async function deletePlan(id) {
 
 export async function generatePlan(goal, userId) {
     const dto = { goal, userId };
-    const res = await axios.post('/workoutPlans/generateOnly', dto);
+    const res = await axios.post('/workoutPlans/generate-only', dto);
     return res.data;
 }

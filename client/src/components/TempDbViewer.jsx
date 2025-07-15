@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getExercises } from "../services/ExerciseService";
 import { getPromptHistory } from "../services/PromptHistoryService";
-import { getAllPlans } from "../services/WokroutPlanService";
+import { getAllPlans } from "../services/WorkoutPlanService";
 import { getWorkoutDays } from "../services/WorkoutDayService";
 import { getWorkoutExercises } from "../services/WorkoutExerciseService";
 import { getWorkoutLogs } from "../services/WorkoutLogService";
