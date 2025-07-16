@@ -25,8 +25,9 @@ export async function deletePlan(id) {
     return res.data;
 }
 
-export async function generatePlan(goal, userId) {
-    const dto = { goal, userId };
+//this shit is wrong it doesnt take a goal and a userId it just takes a prompt fix later zzzzzzz
+export async function generatePlan(prompt) {
+    const dto = { prompt };
     const res = await axios.post('/workoutPlans/generate-only', dto);
     return res.data;
 }
