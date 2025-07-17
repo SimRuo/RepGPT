@@ -6,7 +6,6 @@ namespace server.DTOs.WorkoutExercise
         public int Reps { get; set; }
         public decimal TargetWeight { get; set; }
         public TimeSpan TargetTime { get; set; }
-        public int WorkoutDayId { get; set; }
-        public int ExerciseId { get; set; }
+        public string ExerciseName { get; set; } = string.Empty;
     }
 }

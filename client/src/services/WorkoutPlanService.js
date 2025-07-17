@@ -9,10 +9,13 @@ export async function getPlanById(id) {
     const res = await axios.get(`/workoutPlans/${id}`);
     return res.data;
 }
+export async function createPlan(planDto, userId) {
+    const response = await axios.post("/workoutPlans", {
+        ...planDto,
+        userId
+    });
 
-export async function createPlan(dto) {
-    const res = await axios.post('/workoutPlans', dto);
-    return res.data;
+    return response.data;
 }
 
 export async function updatePlan(id, dto) {

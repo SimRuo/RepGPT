@@ -24,7 +24,7 @@ function ChatView() {
       console.log(prompt);
       console.log(planDto);
       // 2. Use returned plan to create it in DB
-      const result = await createPlan(planDto);
+      const result = await createPlan(planDto, userId);
 
       setSuccessMessage(`Workout plan "${result.name}" created successfully!`);
       setPrompt("");

@@ -55,8 +55,6 @@ namespace server.Services
                 Reps = dto.Reps,
                 TargetWeight = dto.TargetWeight,
                 TargetTime = dto.TargetTime,
-                WorkoutDayId = dto.WorkoutDayId,
-                ExerciseId = dto.ExerciseId
             };
 
             _context.WorkoutExercises.Add(exercise);

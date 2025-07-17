@@ -49,7 +49,6 @@ namespace server.Services
             {
                 DayOfTheWeek = dto.DayOfTheWeek,
                 Notes = dto.Notes,
-                WorkoutPlanId = dto.WorkoutPlanId
             };
 
             _context.WorkoutDays.Add(day);

@@ -48,58 +48,49 @@ namespace server.Services
 
         public async Task<WorkoutPlanReadDto> CreateAsync(WorkoutPlanCreateDto dto)
         {
-            // 1. Generate prompt and call GPT
-            string prompt = $"Create a workout plan for the following goal: {dto.Goal}.";
-            string gptJson = await _gptService.SendPromptAsync(prompt);
-
-            var gptPlan = JsonSerializer.Deserialize<GptWorkoutPlan>(gptJson);
-            if (gptPlan == null)
-                throw new Exception("Invalid GPT response");
-
-            // 2. Create WorkoutPlan
             var workoutPlan = new WorkoutPlan
             {
-                Name = gptPlan.Name,
-                Goal = gptPlan.Goal,
+                Name = dto.Name,
+                Goal = dto.Goal,
                 UserId = dto.UserId,
                 WorkoutDays = new List<WorkoutDay>()
             };
 
-            foreach (var gptDay in gptPlan.WorkoutDays)
+            foreach (var dayDto in dto.WorkoutDays)
             {
                 var workoutDay = new WorkoutDay
                 {
-                    DayOfTheWeek = DateTime.Parse(gptDay.DayOfTheWeek),
-                    Notes = gptDay.Notes,
+                    DayOfTheWeek = dayDto.DayOfTheWeek,
+                    Notes = dayDto.Notes,
                     WorkoutExercises = new List<WorkoutExercise>()
                 };
 
-                foreach (var gptEx in gptDay.WorkoutExercises)
+                foreach (var exDto in dayDto.WorkoutExercises)
                 {
-                    // Lookup or create Exercise
+                    // Find or create exercise
                     var exercise = await _context.Exercises
-                        .FirstOrDefaultAsync(e => e.Name == gptEx.ExerciseName);
+                        .FirstOrDefaultAsync(e => e.Name.ToLower() == exDto.ExerciseName.ToLower());
 
                     if (exercise == null)
                     {
                         exercise = new Exercise
                         {
-                            Name = gptEx.ExerciseName,
-                            Equipment = "Bodyweight", // fallback
-                            PrimaryMuscleGroup = "General" // fallback
+                            Name = exDto.ExerciseName,
+                            Equipment = "Bodyweight", // Default
+                            PrimaryMuscleGroup = "General" // Default
                         };
 
                         _context.Exercises.Add(exercise);
-                        await _context.SaveChangesAsync(); // save now to get Id
+                        await _context.SaveChangesAsync(); // Ensure exercise.Id is available
                     }
 
                     workoutDay.WorkoutExercises.Add(new WorkoutExercise
                     {
-                        ExerciseId = exercise.Id,
-                        Sets = gptEx.Sets,
-                        Reps = gptEx.Reps,
-                        TargetWeight = gptEx.TargetWeight,
-                        TargetTime = TimeSpan.Parse(gptEx.TargetTime)
+                        Sets = exDto.Sets,
+                        Reps = exDto.Reps,
+                        TargetWeight = exDto.TargetWeight,
+                        TargetTime = exDto.TargetTime,
+                        ExerciseId = exercise.Id
                     });
                 }
 
@@ -117,6 +108,8 @@ namespace server.Services
                 UserId = workoutPlan.UserId
             };
         }
+
+
         public async Task<bool> UpdateAsync(int id, WorkoutPlanUpdateDto dto)
         {
             var plan = await _context.WorkoutPlans.FindAsync(id);
