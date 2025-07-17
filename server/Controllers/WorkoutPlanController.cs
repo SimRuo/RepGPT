@@ -71,5 +71,11 @@ namespace server.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<IEnumerable<WorkoutPlanReadDto>>> GetByUserId(int userId)
+        {
+            var plans = await _service.GetByUserIdAsync(userId);
+            return Ok(plans);
+        }
     }
 }

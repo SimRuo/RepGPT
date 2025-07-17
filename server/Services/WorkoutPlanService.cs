@@ -2,6 +2,8 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.DTOs.GPT;
+using server.DTOs.WorkoutDay;
+using server.DTOs.WorkoutExercise;
 using server.DTOs.WorkoutPlan;
 using server.Models;
 using server.Services.Ai;
@@ -22,26 +24,63 @@ namespace server.Services
         public async Task<List<WorkoutPlanReadDto>> GetAllAsync()
         {
             return await _context.WorkoutPlans
+                .Include(wp => wp.WorkoutDays)
+                    .ThenInclude(d => d.WorkoutExercises)
+                        .ThenInclude(we => we.Exercise)
                 .Select(wp => new WorkoutPlanReadDto
                 {
                     Id = wp.Id,
                     Name = wp.Name,
                     Goal = wp.Goal,
-                    UserId = wp.UserId
+                    UserId = wp.UserId,
+                    WorkoutDays = wp.WorkoutDays.Select(d => new WorkoutDayReadDto
+                    {
+                        Id = d.Id,
+                        DayOfTheWeek = d.DayOfTheWeek,
+                        Notes = d.Notes,
+                        WorkoutExercises = d.WorkoutExercises.Select(e => new WorkoutExerciseReadDto
+                        {
+                            Id = e.Id,
+                            Sets = e.Sets,
+                            Reps = e.Reps,
+                            TargetWeight = e.TargetWeight,
+                            TargetTime = e.TargetTime,
+                            ExerciseName = e.Exercise.Name
+                        }).ToList()
+                    }).ToList()
                 })
                 .ToListAsync();
         }
 
+
         public async Task<WorkoutPlanReadDto?> GetByIdAsync(int id)
         {
             return await _context.WorkoutPlans
+                .Include(wp => wp.WorkoutDays)
+                    .ThenInclude(d => d.WorkoutExercises)
+                        .ThenInclude(e => e.Exercise)
                 .Where(wp => wp.Id == id)
                 .Select(wp => new WorkoutPlanReadDto
                 {
                     Id = wp.Id,
                     Name = wp.Name,
                     Goal = wp.Goal,
-                    UserId = wp.UserId
+                    UserId = wp.UserId,
+                    WorkoutDays = wp.WorkoutDays.Select(d => new WorkoutDayReadDto
+                    {
+                        Id = d.Id,
+                        DayOfTheWeek = d.DayOfTheWeek,
+                        Notes = d.Notes,
+                        WorkoutExercises = d.WorkoutExercises.Select(e => new WorkoutExerciseReadDto
+                        {
+                            Id = e.Id,
+                            Sets = e.Sets,
+                            Reps = e.Reps,
+                            TargetWeight = e.TargetWeight,
+                            TargetTime = e.TargetTime,
+                            ExerciseName = e.Exercise.Name
+                        }).ToList()
+                    }).ToList()
                 })
                 .FirstOrDefaultAsync();
         }
@@ -131,5 +170,37 @@ namespace server.Services
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<List<WorkoutPlanReadDto>> GetByUserIdAsync(int userId)
+        {
+            return await _context.WorkoutPlans
+                .Where(wp => wp.UserId == userId)
+                .Include(wp => wp.WorkoutDays)
+                    .ThenInclude(wd => wd.WorkoutExercises)
+                    .ThenInclude(we => we.Exercise)
+                .Select(wp => new WorkoutPlanReadDto
+                {
+                    Id = wp.Id,
+                    Name = wp.Name,
+                    Goal = wp.Goal,
+                    UserId = wp.UserId,
+                    WorkoutDays = wp.WorkoutDays.Select(d => new WorkoutDayReadDto
+                    {
+                        Id = d.Id,
+                        DayOfTheWeek = d.DayOfTheWeek,
+                        Notes = d.Notes,
+                        WorkoutExercises = d.WorkoutExercises.Select(e => new WorkoutExerciseReadDto
+                        {
+                            Id = e.Id,
+                            Sets = e.Sets,
+                            Reps = e.Reps,
+                            TargetWeight = e.TargetWeight,
+                            TargetTime = e.TargetTime,
+                            ExerciseName = e.Exercise.Name
+                        }).ToList()
+                    }).ToList()
+                })
+                .ToListAsync();
+        }
+
     }
 }

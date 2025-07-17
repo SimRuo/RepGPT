@@ -24,6 +24,7 @@ function ChatView() {
       console.log(prompt);
       console.log(planDto);
       // 2. Use returned plan to create it in DB
+      // These 2 steps should maybe be just one call to the backend? Works well atleast
       const result = await createPlan(planDto, userId);
 
       setSuccessMessage(`Workout plan "${result.name}" created successfully!`);
