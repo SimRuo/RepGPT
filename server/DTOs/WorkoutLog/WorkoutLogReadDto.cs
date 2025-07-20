@@ -12,5 +12,7 @@ namespace server.DTOs.WorkoutLog
 
         public int UserId { get; set; }
         public int WorkoutExerciseId { get; set; }
+        public string ExerciseName { get; set; } = string.Empty;
+
     }
 }

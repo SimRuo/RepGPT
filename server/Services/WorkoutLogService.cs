@@ -27,7 +27,8 @@ namespace server.Services
                     ActualTime = wl.ActualTime,
                     Notes = wl.Notes,
                     UserId = wl.User.Id,
-                    WorkoutExerciseId = wl.WorkoutExercise.Id
+                    WorkoutExerciseId = wl.WorkoutExercise.Id,
+                    ExerciseName = wl.WorkoutExercise.Exercise.Name
                 })
                 .ToListAsync();
         }
@@ -46,7 +47,8 @@ namespace server.Services
                     ActualTime = wl.ActualTime,
                     Notes = wl.Notes,
                     UserId = wl.User.Id,
-                    WorkoutExerciseId = wl.WorkoutExercise.Id
+                    WorkoutExerciseId = wl.WorkoutExercise.Id,
+                    ExerciseName = wl.WorkoutExercise.Exercise.Name
                 })
                 .FirstOrDefaultAsync();
         }

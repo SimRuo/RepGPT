@@ -15,7 +15,7 @@ namespace server.Models
         public TimeSpan ActualTime { get; set; }
         public string Notes { get; set; } = string.Empty;
 
-        public int UserId { get; set; } // FK back to User
+        public int UserId { get; set; }
         public User User { get; set; } = null!;
 
 
