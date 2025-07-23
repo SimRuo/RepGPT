@@ -106,7 +106,8 @@ namespace server.Services
 
                 foreach (var exDto in dayDto.WorkoutExercises)
                 {
-                    // Find or create exercise
+                    // Since we're not working with a populated database of exercises, 
+                    // we're just creating them on the fly if their name doesnt already appear in the database
                     var exercise = await _context.Exercises
                         .FirstOrDefaultAsync(e => e.Name.ToLower() == exDto.ExerciseName.ToLower());
 
@@ -115,12 +116,12 @@ namespace server.Services
                         exercise = new Exercise
                         {
                             Name = exDto.ExerciseName,
-                            Equipment = "Bodyweight", // Default
-                            PrimaryMuscleGroup = "General" // Default
+                            Equipment = "Bodyweight",
+                            PrimaryMuscleGroup = "General"
                         };
 
                         _context.Exercises.Add(exercise);
-                        await _context.SaveChangesAsync(); // Ensure exercise.Id is available
+                        await _context.SaveChangesAsync();
                     }
 
                     workoutDay.WorkoutExercises.Add(new WorkoutExercise
@@ -200,6 +201,39 @@ namespace server.Services
                     }).ToList()
                 })
                 .ToListAsync();
+        }
+        public async Task<bool> ApplyProgressiveOverloadAsync(int workoutPlanId)
+        {
+            var plan = await _context.WorkoutPlans
+                .Include(p => p.WorkoutDays)
+                    .ThenInclude(d => d.WorkoutExercises)
+                .FirstOrDefaultAsync(p => p.Id == workoutPlanId);
+
+            if (plan == null) return false;
+
+            foreach (var day in plan.WorkoutDays)
+            {
+                day.DayOfTheWeek = day.DayOfTheWeek.AddDays(7);
+
+                foreach (var ex in day.WorkoutExercises)
+                {
+                    var recentLog = await _context.WorkoutLogs
+                        .Where(l => l.WorkoutExerciseId == ex.Id)
+                        .OrderByDescending(l => l.Date)
+                        .FirstOrDefaultAsync();
+
+                    if (recentLog != null &&
+                        recentLog.CompletedReps >= ex.Reps &&
+                        recentLog.CompletedSets >= ex.Sets)
+                    {
+                        ex.TargetWeight = recentLog.ActualWeight + 2.5m;
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
     }

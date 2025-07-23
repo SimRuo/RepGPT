@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Typography, CircularProgress, Alert, Grid, Paper, Box } from "@mui/material";
-import { getPlansForUser } from "../services/WorkoutPlanService";
+import { applyProgressiveOverload, getPlansForUser } from "../services/WorkoutPlanService";
 import { getLoggedInUserId } from "../services/auth";
 import WorkoutPlanCard from "../components/WorkoutPlanCard";
 
@@ -25,6 +25,16 @@ function Dashboard() {
     fetchPlans();
   }, []);
 
+  async function handleProgressiveOverload(planId) {
+    try {
+      await applyProgressiveOverload(planId);
+      const userId = getLoggedInUserId();
+      const updatedPlans = await getPlansForUser(userId);
+      setPlans(updatedPlans);
+    } catch (err) {
+      setError("Failed to apply progressive overload.");
+    }
+  }
   return (
     <Container
       maxWidth="xl"
@@ -69,10 +79,9 @@ function Dashboard() {
           {error}
         </Alert>
       )}
-
       {plans.map((plan) => (
         <Grid key={plan.id}>
-          <WorkoutPlanCard plan={plan} />
+          <WorkoutPlanCard plan={plan} onNextWeek={() => handleProgressiveOverload(plan.id)} />
         </Grid>
       ))}
     </Container>

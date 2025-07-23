@@ -1,8 +1,8 @@
-import { Card, CardContent, Typography, Divider, Chip, Box } from "@mui/material";
+import { Card, CardContent, Typography, Divider, Chip, Box, Button } from "@mui/material";
 import WorkoutDayAccordion from "./WorkoutDayAccordion";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 
-function WorkoutPlanCard({ plan }) {
+function WorkoutPlanCard({ plan, onNextWeek }) {
   return (
     <Card
       sx={{
@@ -39,6 +39,9 @@ function WorkoutPlanCard({ plan }) {
           <WorkoutDayAccordion key={day.id} day={day} />
         ))}
       </CardContent>
+      <Button variant="contained" onClick={onNextWeek}>
+        Next Week
+      </Button>
     </Card>
   );
 }

@@ -77,5 +77,11 @@ namespace server.Controllers
             var plans = await _service.GetByUserIdAsync(userId);
             return Ok(plans);
         }
+        [HttpPost("{id}/progress")]
+        public async Task<IActionResult> ApplyProgression(int id)
+        {
+            var updated = await _service.ApplyProgressiveOverloadAsync(id);
+            return updated ? Ok() : NotFound();
+        }
     }
 }

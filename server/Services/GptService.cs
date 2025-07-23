@@ -8,16 +8,6 @@ namespace server.Services.Ai
 {
     public class GptService
     {
-
-        /* This is just a mock up of what it could look like once it is done. 
-
-        We can call it:
-        From a PromptHistoryController when a user submits a new prompt.
-
-        From a WorkoutPlanService if we're generating plans dynamically.
-
-        Or from anywhere else business logic needs GPT. */
-
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
 
@@ -92,16 +82,3 @@ namespace server.Services.Ai
         }
     }
 }
-
-/* 
-Pseudo code of how we can parse these replies
-
-var exercise = await _context.Exercises.FirstOrDefaultAsync(e => e.Name == dto.ExerciseName);
-if (exercise == null)
-{
-    exercise = new Exercise { Name = dto.ExerciseName,  default group/equipment  };
-    _context.Exercises.Add(exercise);
-    await _context.SaveChangesAsync();
-} 
-
-*/

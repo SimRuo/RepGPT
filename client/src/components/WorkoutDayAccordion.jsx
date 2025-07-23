@@ -21,8 +21,8 @@ function WorkoutDayAccordion({ day }) {
     const defaultInputs = {};
     day.workoutExercises.forEach((ex) => {
       defaultInputs[ex.id] = {
-        actualSets: ex.sets,
-        actualReps: ex.reps,
+        completedSets: ex.sets,
+        completedReps: ex.reps,
         actualWeight: ex.targetWeight,
         actualTime: ex.targetTime,
       };
@@ -45,19 +45,18 @@ function WorkoutDayAccordion({ day }) {
         const input = inputs[ex.id];
         await createWorkoutLog({
           workoutExerciseId: ex.id,
-          actualSets: parseInt(input.actualSets),
-          actualReps: parseInt(input.actualReps),
+          completedSets: parseInt(input.completedSets),
+          completedReps: parseInt(input.completedReps),
           actualWeight: parseFloat(input.actualWeight),
           actualTime: input.actualTime,
           userId: userId,
+          date: new Date().toISOString(),
         });
       }
 
       setLogging(false);
-      alert("Workout logged!");
     } catch (err) {
       console.error(err);
-      alert("Failed to log workout.");
     }
   };
 
@@ -125,8 +124,8 @@ function WorkoutDayAccordion({ day }) {
                       <TextField
                         label="Sets"
                         type="number"
-                        value={inputs[ex.id]?.actualSets || ""}
-                        onChange={(e) => handleChange(ex.id, "actualSets", e.target.value)}
+                        value={inputs[ex.id]?.completedSets || ""}
+                        onChange={(e) => handleChange(ex.id, "completedSets", e.target.value)}
                         size="small"
                       />
                     </Grid>
@@ -134,8 +133,8 @@ function WorkoutDayAccordion({ day }) {
                       <TextField
                         label="Reps"
                         type="number"
-                        value={inputs[ex.id]?.actualReps || ""}
-                        onChange={(e) => handleChange(ex.id, "actualReps", e.target.value)}
+                        value={inputs[ex.id]?.completedReps || ""}
+                        onChange={(e) => handleChange(ex.id, "completedReps", e.target.value)}
                         size="small"
                       />
                     </Grid>

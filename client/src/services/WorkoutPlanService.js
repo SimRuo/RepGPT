@@ -39,3 +39,8 @@ export async function getPlansForUser(userId) {
     const res = await axios.get(`/workoutPlans/user/${userId}`);
     return res.data;
 }
+
+export async function applyProgressiveOverload(planId) {
+    const res = await axios.post(`/workoutPlans/${planId}/progress`);
+    return res.data;
+}
