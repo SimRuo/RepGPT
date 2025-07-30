@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using server.Data;
 
@@ -11,9 +12,11 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(RepGPTContext))]
-    partial class RepGPTContextModelSnapshot : ModelSnapshot
+    [Migration("20250729094249_AddCascadeDeleteUser")]
+    partial class AddCascadeDeleteUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +51,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Exercises", (string)null);
+                    b.ToTable("Exercises");
                 });
 
             modelBuilder.Entity("server.Models.PromptHistory", b =>
@@ -77,7 +80,7 @@ namespace server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PromptHistorys", (string)null);
+                    b.ToTable("PromptHistorys");
                 });
 
             modelBuilder.Entity("server.Models.User", b =>
@@ -102,7 +105,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("server.Models.WorkoutDay", b =>
@@ -127,7 +130,7 @@ namespace server.Migrations
 
                     b.HasIndex("WorkoutPlanId");
 
-                    b.ToTable("WorkoutDays", (string)null);
+                    b.ToTable("WorkoutDays");
                 });
 
             modelBuilder.Entity("server.Models.WorkoutExercise", b =>
@@ -162,7 +165,7 @@ namespace server.Migrations
 
                     b.HasIndex("WorkoutDayId");
 
-                    b.ToTable("WorkoutExercises", (string)null);
+                    b.ToTable("WorkoutExercises");
                 });
 
             modelBuilder.Entity("server.Models.WorkoutLog", b =>
@@ -204,7 +207,7 @@ namespace server.Migrations
 
                     b.HasIndex("WorkoutExerciseId");
 
-                    b.ToTable("WorkoutLogs", (string)null);
+                    b.ToTable("WorkoutLogs");
                 });
 
             modelBuilder.Entity("server.Models.WorkoutPlan", b =>
@@ -231,7 +234,7 @@ namespace server.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("WorkoutPlans", (string)null);
+                    b.ToTable("WorkoutPlans");
                 });
 
             modelBuilder.Entity("server.Models.PromptHistory", b =>

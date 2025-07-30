@@ -2,12 +2,13 @@ import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, Avatar,
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import WorkoutExerciseList from "./WorkoutExerciseList";
 import { createWorkoutLog } from "../services/WorkoutLogService";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { getLoggedInUserId } from "../services/auth";
 
-function WorkoutDayAccordion({ day }) {
+function WorkoutDayAccordion({ day, logs, setLogs }) {
   const [logging, setLogging] = useState(false);
   const [inputs, setInputs] = useState({});
+
   const date = new Date(day.dayOfTheWeek);
   const formattedDate = date.toLocaleDateString("en-US", {
     weekday: "long",
@@ -15,6 +16,12 @@ function WorkoutDayAccordion({ day }) {
     day: "numeric",
   });
   const exerciseCount = day.workoutExercises.length;
+
+  const alreadyLogged = useMemo(() => {
+    return day.workoutExercises.every((ex) =>
+      logs.some((log) => log.workoutExerciseId === ex.id && new Date(log.date).toDateString() === new Date(day.dayOfTheWeek).toDateString())
+    );
+  }, [logs, day]);
 
   const handleStart = () => {
     setLogging(true);
@@ -40,20 +47,24 @@ function WorkoutDayAccordion({ day }) {
   const handleSubmit = async () => {
     try {
       const userId = getLoggedInUserId();
+      const newLogs = [];
 
       for (const ex of day.workoutExercises) {
         const input = inputs[ex.id];
-        await createWorkoutLog({
+        const logDto = {
           workoutExerciseId: ex.id,
           completedSets: parseInt(input.completedSets),
           completedReps: parseInt(input.completedReps),
           actualWeight: parseFloat(input.actualWeight),
           actualTime: input.actualTime,
           userId: userId,
-          date: new Date().toISOString(),
-        });
+          date: day.dayOfTheWeek,
+        };
+        const createdLog = await createWorkoutLog(logDto);
+        newLogs.push(createdLog);
       }
 
+      setLogs((prev) => [...prev, ...newLogs]);
       setLogging(false);
     } catch (err) {
       console.error(err);
@@ -61,23 +72,12 @@ function WorkoutDayAccordion({ day }) {
   };
 
   return (
-    <Accordion
-      sx={{
-        mb: 1,
-        borderRadius: "8px !important",
-        overflow: "hidden",
-        "&:before": {
-          display: "none",
-        },
-      }}
-    >
+    <Accordion sx={{ mb: 1, borderRadius: "8px !important", overflow: "hidden", "&:before": { display: "none" } }}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         sx={{
           backgroundColor: "rgba(0, 120, 212, 0.05)",
-          "&:hover": {
-            backgroundColor: "rgba(0, 120, 212, 0.08)",
-          },
+          "&:hover": { backgroundColor: "rgba(0, 120, 212, 0.08)" },
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
@@ -107,8 +107,8 @@ function WorkoutDayAccordion({ day }) {
         {!logging ? (
           <>
             <WorkoutExerciseList exercises={day.workoutExercises} />
-            <Button onClick={handleStart} variant="contained" sx={{ mt: 2 }}>
-              Begin Workout
+            <Button onClick={handleStart} variant="contained" sx={{ mt: 2 }} disabled={alreadyLogged}>
+              {alreadyLogged ? "Workout Finished!" : "Begin Workout"}
             </Button>
           </>
         ) : (

@@ -9,6 +9,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ChatIcon from "@mui/icons-material/Chat";
 import HomeIcon from "@mui/icons-material/Home";
 import CssBaseline from "@mui/material/CssBaseline";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -43,23 +44,23 @@ function App() {
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
           <List>
-            <ListItem button onClick={() => handleNavigation("/")}>
+            <ListItem button onClick={() => handleNavigation("/dashboard")}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button onClick={() => handleNavigation("/dashboard")}>
+            <ListItem button onClick={() => handleNavigation("/statistics")}>
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
-              <ListItemText primary="Dashboard" />
+              <ListItemText primary="Statistics" />
             </ListItem>
-            <ListItem button onClick={() => handleNavigation("/chat")}>
+            <ListItem button onClick={() => handleNavigation("/settings")}>
               <ListItemIcon>
-                <ChatIcon />
+                <SettingsIcon />
               </ListItemIcon>
-              <ListItemText primary="Chat" />
+              <ListItemText primary="Settings" />
             </ListItem>
           </List>
         </Box>
