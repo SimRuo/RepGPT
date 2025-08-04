@@ -68,17 +68,17 @@ dotnet run
 Handled through Azure environment variables (backend) and github secrets (frontend)
 
 ### Deployment
-Frontend: Azure Static Web Apps
-Backend: Azure App Service
-Database: Azure SQL Database
+- Frontend: Azure Static Web Apps
+- Backend: Azure App Service
+- Database: Azure SQL Database
 
 ### What I Learned
-Using Azure OpenAI to produce structured JSON outputs
-Deploying a full-stack app to Azure
-Working with environment variables and secrets securely
-Combining a React SPA with an ASP.NET API
-DTO pattern
-There's almost too much to list here.
+- Using Azure OpenAI to produce structured JSON outputs
+- Deploying a full-stack app to Azure
+- Working with environment variables and secrets securely
+- Combining a React SPA with an ASP.NET API
+- DTO pattern
+- There's almost too much to list here.
 
 ### Next Steps / Ideas
 - Proper React routing so manually setting the URL doesnt break everything
