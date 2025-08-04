@@ -82,6 +82,7 @@ Handled through Azure environment variables (backend) and github secrets (fronte
 
 ### Next Steps / Ideas
 - Proper React routing so manually setting the URL doesnt break everything
+- Clean up unused code/files left over from development
 - UI improvements
 - AI personalization for truly dynamic progressive overload
 - Database refactoring for more advanced periodizations and support for cardio plans
