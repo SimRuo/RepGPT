@@ -51,24 +51,28 @@ This project gave me an excuse to work through cloud deployment, dabble in authe
 - Access to an Azure SQL DB or local SQL server
 
 ### Frontend
+```bash
 cd client
 npm install
 npm run dev
+```
 
 ### Backend
+```bash
 cd server
 dotnet restore
 dotnet run
+```
 
 ### Secrets
 Handled through Azure environment variables (backend) and github secrets (frontend)
 
-###Deployment
+### Deployment
 Frontend: Azure Static Web Apps
 Backend: Azure App Service
 Database: Azure SQL Database
 
-###What I Learned
+### What I Learned
 Using Azure OpenAI to produce structured JSON outputs
 Deploying a full-stack app to Azure
 Working with environment variables and secrets securely
@@ -76,8 +80,8 @@ Combining a React SPA with an ASP.NET API
 DTO pattern
 There's almost too much to list here.
 
-###Next Steps / Ideas
-Proper React routing so manually setting the URL doesnt break everything
-UI improvements
-AI personalization for truly dynamic progressive overload
-Database refactoring for more advanced periodizations and support for cardio plans
+### Next Steps / Ideas
+- Proper React routing so manually setting the URL doesnt break everything
+- UI improvements
+- AI personalization for truly dynamic progressive overload
+- Database refactoring for more advanced periodizations and support for cardio plans
