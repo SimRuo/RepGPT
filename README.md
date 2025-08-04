@@ -51,13 +51,11 @@ This project gave me an excuse to work through cloud deployment, dabble in authe
 - Access to an Azure SQL DB or local SQL server
 
 ### Frontend
-```bash
 cd client
 npm install
 npm run dev
 
 ### Backend
-```bash
 cd server
 dotnet restore
 dotnet run
