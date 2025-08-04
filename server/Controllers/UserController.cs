@@ -33,7 +33,7 @@ namespace server.Controllers
 
         // GET: api/user/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserReadDto>> GetById(int id)
+        public async Task<ActionResult<UserReadDto>> GetById(Guid id)
         {
             var user = await _userService.GetByIdAsync(id);
             if (user == null) return NotFound();

@@ -10,7 +10,7 @@ namespace server.DTOs.WorkoutLog
         public TimeSpan ActualTime { get; set; }
         public string Notes { get; set; } = string.Empty;
 
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public int WorkoutExerciseId { get; set; }
         public string ExerciseName { get; set; } = string.Empty;
 

@@ -1,10 +1,12 @@
 import axios from 'axios';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const instance = axios.create({
-    baseURL: 'http://localhost:5155/api', // switch this for azure endpoint later
+    baseURL: apiUrl,
     headers: {
         'Content-Type': 'application/json',
-    }
+    },
 });
 
 export default instance;

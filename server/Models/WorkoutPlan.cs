@@ -12,7 +12,7 @@ namespace server.Models
         public string Goal { get; set; } = string.Empty;
 
 
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public User User { get; set; } = null!;
         public List<WorkoutDay> WorkoutDays { get; set; } = new();
 

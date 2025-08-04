@@ -108,5 +108,25 @@ namespace server.Services
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<List<WorkoutLogReadDto>> GetByUserIdAsync(Guid userId)
+        {
+            return await _context.WorkoutLogs
+                .Where(wl => wl.UserId == userId)
+                .Select(wl => new WorkoutLogReadDto
+                {
+                    Id = wl.Id,
+                    Date = wl.Date,
+                    CompletedSets = wl.CompletedSets,
+                    CompletedReps = wl.CompletedReps,
+                    ActualWeight = wl.ActualWeight,
+                    ActualTime = wl.ActualTime,
+                    Notes = wl.Notes,
+                    UserId = wl.UserId,
+                    WorkoutExerciseId = wl.WorkoutExercise.Id,
+                    ExerciseName = wl.WorkoutExercise.Exercise.Name
+                })
+                .ToListAsync();
+        }
+
     }
 }

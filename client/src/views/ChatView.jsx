@@ -1,34 +1,32 @@
 import { Container, Typography, Box, TextField, Button, CircularProgress, Alert } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getLoggedInUserId } from "../services/auth";
 import { generatePlan, createPlan } from "../services/WorkoutPlanService";
+import { addPrompt } from "../services/PromptHistoryService";
 
 function ChatView() {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+
+  const navigate = useNavigate();
 
   async function handleSend() {
     setLoading(true);
     setError(null);
-    setSuccessMessage(null);
 
     try {
       const userId = getLoggedInUserId();
       if (!userId) throw new Error("User not logged in");
-      console.log("USER ID:", userId);
 
-      // 1. Call GPT generate API through service
       const planDto = await generatePlan(prompt);
-      console.log(prompt);
-      console.log(planDto);
-      // 2. Use returned plan to create it in DB
-      // These 2 steps should maybe be just one call to the backend? Works well atleast
-      const result = await createPlan(planDto, userId);
 
-      setSuccessMessage(`Workout plan "${result.name}" created successfully!`);
-      setPrompt("");
+      await createPlan(planDto, userId);
+
+      await addPrompt(userId, prompt, JSON.stringify(planDto));
+
+      navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.error || err.message || "Something went wrong");
     } finally {
@@ -62,12 +60,6 @@ function ChatView() {
         <Box sx={{ mt: 2 }}>
           <CircularProgress />
         </Box>
-      )}
-
-      {successMessage && (
-        <Alert severity="success" sx={{ mt: 2 }}>
-          {successMessage}
-        </Alert>
       )}
 
       {error && (

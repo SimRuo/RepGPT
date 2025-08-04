@@ -8,7 +8,7 @@ namespace server.DTOs.WorkoutLog
         public decimal ActualWeight { get; set; }
         public TimeSpan ActualTime { get; set; }
         public string Notes { get; set; } = string.Empty;
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public int WorkoutExerciseId { get; set; }
     }
 }

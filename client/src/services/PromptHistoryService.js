@@ -5,7 +5,12 @@ export async function getPromptHistory() {
     return res.data;
 }
 
-export async function addPrompt(prompt) {
-    const res = await axios.post('/promptHistory', { prompt });
+export async function addPrompt(userId, promptText, responseText) {
+    const res = await axios.post('/promptHistory', {
+        userId,
+        promptText,
+        responseText,
+        createdAt: new Date().toISOString()
+    });
     return res.data;
 }

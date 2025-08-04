@@ -52,5 +52,12 @@ namespace server.Controllers
             if (!success) return NotFound();
             return NoContent();
         }
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetByUserId(Guid userId)
+        {
+            var logs = await _workoutLogService.GetByUserIdAsync(userId);
+            return Ok(logs);
+        }
+
     }
 }

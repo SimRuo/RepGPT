@@ -72,7 +72,7 @@ namespace server.Controllers
             }
         }
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<IEnumerable<WorkoutPlanReadDto>>> GetByUserId(int userId)
+        public async Task<ActionResult<IEnumerable<WorkoutPlanReadDto>>> GetByUserId(Guid userId)
         {
             var plans = await _service.GetByUserIdAsync(userId);
             return Ok(plans);

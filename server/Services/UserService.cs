@@ -42,7 +42,7 @@ namespace server.Services
                 throw new ApplicationException("Failed to fetch users", ex);
             }
         }
-        public async Task<UserReadDto?> GetByIdAsync(int id)
+        public async Task<UserReadDto?> GetByIdAsync(Guid id)
         {
             return await _context.Users
                 .Include(u => u.WorkoutPlan)

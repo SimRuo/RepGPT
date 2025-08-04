@@ -162,16 +162,30 @@ namespace server.Services
             return true;
         }
 
+
         public async Task<bool> DeleteAsync(int id)
         {
-            var plan = await _context.WorkoutPlans.FindAsync(id);
+            var plan = await _context.WorkoutPlans
+                .Include(p => p.WorkoutDays)
+                    .ThenInclude(d => d.WorkoutExercises)
+                        .ThenInclude(e => e.WorkoutLogs)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (plan == null) return false;
+
+            foreach (var day in plan.WorkoutDays)
+            {
+                foreach (var exercise in day.WorkoutExercises)
+                {
+                    _context.WorkoutLogs.RemoveRange(exercise.WorkoutLogs);
+                }
+            }
 
             _context.WorkoutPlans.Remove(plan);
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<List<WorkoutPlanReadDto>> GetByUserIdAsync(int userId)
+        public async Task<List<WorkoutPlanReadDto>> GetByUserIdAsync(Guid userId)
         {
             return await _context.WorkoutPlans
                 .Where(wp => wp.UserId == userId)

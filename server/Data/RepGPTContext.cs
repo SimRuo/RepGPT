@@ -25,6 +25,18 @@ namespace server.Data
                 .WithMany(we => we.WorkoutLogs)
                 .HasForeignKey(wl => wl.WorkoutExerciseId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.WorkoutPlan)
+                .WithOne(p => p.User)
+                .HasForeignKey<WorkoutPlan>(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.WorkoutLogs)
+                .WithOne(l => l.User)
+                .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
     }

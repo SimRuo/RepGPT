@@ -7,7 +7,7 @@ namespace server.DTOs.WorkoutPlan
     {
         public string Name { get; set; } = string.Empty;
         public string Goal { get; set; } = string.Empty;
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         public List<WorkoutDayCreateDto> WorkoutDays { get; set; } = new();
     }

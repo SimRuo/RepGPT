@@ -5,11 +5,13 @@ import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom"
 import App from "./App.jsx";
 import LoginView from "./views/LoginView.jsx";
 import Dashboard from "./views/Dashboard.jsx";
-import NotFound from "./views/NotFound.jsx";
+import NotFound from "./views/Notfound.jsx";
 import ChatView from "./views/ChatView.jsx";
 import FrontPage from "./views/FrontPage.jsx";
 import { getUserState } from "./services/getUserState";
 import RegisterView from "./views/RegisterView.jsx";
+import WorkoutStatistics from "./views/WorkoutStatistics";
+import SettingsView from "./views/SettingsView.jsx";
 
 import "./index.css";
 
@@ -56,6 +58,24 @@ const router = createBrowserRouter([
         loader: async () => {
           const { status } = await getUserState();
           if (status !== "unauthenticated") return redirect("/"); // logged-in users go home
+          return null;
+        },
+      },
+      {
+        path: "/statistics",
+        element: <WorkoutStatistics />,
+        loader: async () => {
+          const { status } = await getUserState();
+          if (status === "unauthenticated") return redirect("/");
+          return null;
+        },
+      },
+      {
+        path: "/settings",
+        element: <SettingsView />,
+        loader: async () => {
+          const { status } = await getUserState();
+          if (status === "unauthenticated") return redirect("/");
           return null;
         },
       },

@@ -12,7 +12,7 @@ namespace server.Models
         public string ResponseText { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
 
-        public int UserId { get; set; } // FK back to User
+        public Guid UserId { get; set; } // FK back to User
         public User User { get; set; } = null!;
     }
 }
