@@ -1,4 +1,6 @@
-# RepGPT - https://wonderful-flower-0a7716003.1.azurestaticapps.net/
+# RepGPT
+
+https://wonderful-flower-0a7716003.1.azurestaticapps.net/
 
 This is a personal project where I explored how AI could help with creating and tracking workout plans. This was developed in conjunction with AZ-900 studies.
 It combines an **ASP.NET Core backend**, **React frontend**, and **Azure OpenAI** to generate personalized workout schedules and track progress.
@@ -78,11 +80,13 @@ Handled through Azure environment variables (backend) and github secrets (fronte
 - Working with environment variables and secrets securely
 - Combining a React SPA with an ASP.NET API
 - DTO pattern
+- Basic CI/CD
 - There's almost too much to list here.
 
 ### Next Steps / Ideas
 - Proper React routing so manually setting the URL doesnt break everything
 - Clean up unused code/files left over from development
+- Complete a proper CI/CD pipeline, this one is very basic
 - UI improvements
 - AI personalization for truly dynamic progressive overload
 - Database refactoring for more advanced periodizations and support for cardio plans
