@@ -84,9 +84,9 @@ Handled through Azure environment variables (backend) and github secrets (fronte
 - There's almost too much to list here.
 
 ### Next Steps / Ideas
-- Proper React routing so manually setting the URL doesnt break everything
+- ~~Proper React routing so manually setting the URL doesnt break everything~~
 - Clean up unused code/files left over from development
-- Complete a proper CI/CD pipeline, this one is very basic
+- Complete a proper CI/CD pipeline, current one is very basic
 - UI improvements
 - AI personalization for truly dynamic progressive overload
 - Database refactoring for more advanced periodizations and support for cardio plans
