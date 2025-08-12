@@ -198,9 +198,6 @@ function FrontPage() {
           <Typography variant="h3" sx={{ mb: 3, fontWeight: 800 }}>
             Ready to Transform Your Workouts?
           </Typography>
-          <Typography variant="h6" sx={{ mb: 5, opacity: 0.9 }}>
-            Join thousands of users achieving better results with AI-powered fitness.
-          </Typography>
           <Button
             variant="contained"
             color="primary"
@@ -214,7 +211,7 @@ function FrontPage() {
               boxShadow: theme.shadows[6],
             }}
           >
-            Start Your Free Trial
+            Create your free account
           </Button>
         </Container>
       </Box>
