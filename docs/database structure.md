@@ -116,4 +116,3 @@ Stores LLM interaction history.
 
 - ERD as a `.drawio` file
 - SQL schema definition
-- Entity Framework Core model classes
