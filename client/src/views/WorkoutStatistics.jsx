@@ -1,11 +1,34 @@
+// WorkoutStatistics.jsx (responsive)
 import { useEffect, useState } from "react";
-import { Container, Typography, Grid, Paper, CircularProgress, Alert, Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Grid,
+  Paper,
+  CircularProgress,
+  Alert,
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  useMediaQuery
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { getOverallStats, getExerciseStats } from "../services/WorkoutStatisticsService";
 import { getLoggedInUserId } from "../services/auth";
 
 function WorkoutStatistics() {
+  const theme = useTheme();
+  const downSm = useMediaQuery(theme.breakpoints.down("sm"));
+  const downMd = useMediaQuery(theme.breakpoints.down("md"));
+
+  // Chart sizes responsive
+  const chartHeight = downSm ? 220 : downMd ? 260 : 320;
+  const chartWidth  = downSm ? 280 : downMd ? 360 : 520;
+
   const [stats, setStats] = useState(null);
   const [selectedExercise, setSelectedExercise] = useState("");
   const [exerciseStats, setExerciseStats] = useState(null);
@@ -13,7 +36,6 @@ function WorkoutStatistics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- Fetch overall stats ---
   useEffect(() => {
     async function fetchStats() {
       try {
@@ -30,7 +52,6 @@ function WorkoutStatistics() {
     fetchStats();
   }, []);
 
-  // --- Fetch exercise stats ---
   async function handleExerciseChange(exercise) {
     setSelectedExercise(exercise);
     if (!exercise) return;
@@ -46,22 +67,21 @@ function WorkoutStatistics() {
     }
   }
 
-  if (loading) return <CircularProgress sx={{ mt: 4 }} />;
+  if (loading) return <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}><CircularProgress /></Box>;
   if (error) return <Alert severity="error">{error}</Alert>;
   if (!stats || !stats.weeklyVolume?.length) {
     return (
-      <Container maxWidth="sm" sx={{ mt: 8, textAlign: "center" }}>
-        <Typography variant="h5" gutterBottom>
+      <Container maxWidth="sm" sx={{ mt: 6, textAlign: "center" }}>
+        <Typography variant={downSm ? "h6" : "h5"} gutterBottom>
           No workout data yet
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body2" color="text.secondary">
           Finish a workout to see your statistics.
         </Typography>
       </Container>
     );
   }
 
-  // Chart data
   const lineData = stats.weeklyVolume.map((w) => ({ x: w.week, y: w.avgDailyVolume }));
   const exercisePieData = stats.topExercises.map((e, index) => ({
     id: index,
@@ -76,57 +96,63 @@ function WorkoutStatistics() {
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom fontWeight={700}>
+    <Container maxWidth="lg" sx={{ mt: downSm ? 2 : 4, px: { xs: 1.5, sm: 2 } }}>
+      <Typography variant={downSm ? "h5" : "h4"} gutterBottom fontWeight={700}>
         Workout Statistics
       </Typography>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
         {/* Summary Cards */}
         {summaryCards.map((card, i) => (
-          <Grid item xs={12} md={4} key={i} sx={{ display: "flex" }}>
+          <Grid item xs={12} sm={6} md={4} key={i} sx={{ display: "flex" }}>
             <Paper
+              elevation={1}
               sx={{
-                p: 3,
+                p: { xs: 2, md: 3 },
                 textAlign: "center",
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
+                gap: 0.5,
               }}
             >
-              <Typography variant="h6" gutterBottom>
+              <Typography variant={downSm ? "subtitle1" : "h6"} gutterBottom>
                 {card.label}
               </Typography>
-              <Typography variant="h4">{card.value}</Typography>
+              <Typography variant={downSm ? "h5" : "h4"}>{card.value}</Typography>
             </Paper>
           </Grid>
         ))}
 
         {/* Top Exercises Pie Chart */}
         <Grid item xs={12} md={6} sx={{ display: "flex" }}>
-          <Paper sx={{ p: 3, flex: 1 }}>
+          <Paper sx={{ p: { xs: 2, md: 3 }, flex: 1 }}>
             <Typography variant="h6" gutterBottom>
               Top 5 Exercises
             </Typography>
-            <Box sx={{ height: 300, width: "100%" }}>
-              <PieChart series={[{ data: exercisePieData, innerRadius: 40, outerRadius: 100 }]} width={400} height={300} />
+            <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
+              <PieChart
+                series={[{ data: exercisePieData, innerRadius: 40, outerRadius: downSm ? 90 : 110 }]}
+                width={chartWidth}
+                height={chartHeight}
+              />
             </Box>
           </Paper>
         </Grid>
 
         {/* Volume Over Time Chart */}
         <Grid item xs={12} md={6} sx={{ display: "flex" }}>
-          <Paper sx={{ p: 3, flex: 1 }}>
+          <Paper sx={{ p: { xs: 2, md: 3 }, flex: 1 }}>
             <Typography variant="h6" gutterBottom>
               Avg Daily Volume (per week)
             </Typography>
-            <Box sx={{ height: 300, width: "100%" }}>
+            <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
               <LineChart
-                xAxis={[{ scaleType: "band", data: lineData.map((d) => d.x), label: "Week" }]}
+                xAxis={[{ scaleType: "band", data: lineData.map((d) => d.x), label: downSm ? "" : "Week" }]}
                 series={[{ data: lineData.map((d) => d.y), label: "Avg Daily Volume (kg)" }]}
-                width={400}
-                height={300}
+                width={chartWidth}
+                height={chartHeight}
               />
             </Box>
           </Paper>
@@ -134,11 +160,12 @@ function WorkoutStatistics() {
       </Grid>
 
       {/* Exercise Dropdown & Graphs */}
-      <Box sx={{ mt: 6 }}>
-        <Typography variant="h5" gutterBottom>
+      <Box sx={{ mt: { xs: 4, md: 6 } }}>
+        <Typography variant={downSm ? "h6" : "h5"} gutterBottom>
           Detailed Exercise View
         </Typography>
-        <FormControl variant="outlined" sx={{ minWidth: 250, mb: 3 }}>
+
+        <FormControl variant="outlined" size={downSm ? "small" : "medium"} fullWidth sx={{ maxWidth: 420, mb: 3 }}>
           <InputLabel id="exercise-label">Select Exercise</InputLabel>
           <Select
             labelId="exercise-label"
@@ -156,35 +183,36 @@ function WorkoutStatistics() {
             ))}
           </Select>
         </FormControl>
+
         {selectedExercise && !exerciseLoading && exerciseStats && (
-          <Grid container spacing={4}>
+          <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
             <Grid item xs={12} md={6} sx={{ display: "flex" }}>
-              <Paper sx={{ p: 3, flex: 1 }}>
-                <Typography variant="h6" gutterBottom>
-                  {selectedExercise} - Avg Daily Volume
+              <Paper sx={{ p: { xs: 2, md: 3 }, flex: 1 }}>
+                <Typography variant="h6" gutterBottom noWrap={!downSm}>
+                  {selectedExercise} — Avg Daily Volume
                 </Typography>
-                <Box sx={{ height: 300, width: "100%" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
                   <LineChart
-                    xAxis={[{ scaleType: "band", data: exerciseStats.weeklyVolume.map((d) => d.week), label: "Week" }]}
+                    xAxis={[{ scaleType: "band", data: exerciseStats.weeklyVolume.map((d) => d.week), label: downSm ? "" : "Week" }]}
                     series={[{ data: exerciseStats.weeklyVolume.map((d) => d.avgDailyVolume), label: "Avg Daily Volume (kg)" }]}
-                    width={400}
-                    height={300}
+                    width={chartWidth}
+                    height={chartHeight}
                   />
                 </Box>
               </Paper>
             </Grid>
 
             <Grid item xs={12} md={6} sx={{ display: "flex" }}>
-              <Paper sx={{ p: 3, flex: 1 }}>
-                <Typography variant="h6" gutterBottom>
-                  {selectedExercise} - Avg Weight Per Rep
+              <Paper sx={{ p: { xs: 2, md: 3 }, flex: 1 }}>
+                <Typography variant="h6" gutterBottom noWrap={!downSm}>
+                  {selectedExercise} — Avg Weight Per Rep
                 </Typography>
-                <Box sx={{ height: 300, width: "100%" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
                   <LineChart
-                    xAxis={[{ scaleType: "band", data: exerciseStats.avgWeightPerRep.map((d) => d.week), label: "Week" }]}
+                    xAxis={[{ scaleType: "band", data: exerciseStats.avgWeightPerRep.map((d) => d.week), label: downSm ? "" : "Week" }]}
                     series={[{ data: exerciseStats.avgWeightPerRep.map((d) => d.avgWeight), label: "Avg Weight (kg)" }]}
-                    width={400}
-                    height={300}
+                    width={chartWidth}
+                    height={chartHeight}
                   />
                 </Box>
               </Paper>
@@ -192,7 +220,11 @@ function WorkoutStatistics() {
           </Grid>
         )}
 
-        {selectedExercise && exerciseLoading && <CircularProgress sx={{ mt: 4 }} />}
+        {selectedExercise && exerciseLoading && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+            <CircularProgress />
+          </Box>
+        )}
       </Box>
     </Container>
   );
